@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descubra seu presente mozão</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: black;  
+            color: antiquewhite;  
+        }
+
+        #forca {
+            text-align: center;
+        }
+
+        #palavra {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: antiquewhite;
+
+        }
+
+        #tentativas {
+            font-size: 18px;
+            color: antiquewhite;
+        }
+    </style>
+</head>
+<body>
+    <div id="forca">
+        <h1>Qual é meu presente?</h1>
+        <div id="palavra"></div>
+        <div id="tentativas"></div>
+        <input type="text" id="letra" maxlength="1" placeholder="Digite uma letra">
+        <button id="adivinhar">Adivinhar</button>
+        <p></p>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/4SDzjXAcRteIS0zWuTGYEk?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>        
+        
+        <script>
+        const palavras = ['alexandre pavao', 'gabiel', 'pincesa', 'bag', 'four pockets'];
+        let palavraOculta = escolherPalavraAleatoria(palavras);
+        let palavraExibida = '_'.repeat(palavraOculta.length);
+        let tentativasRestantes = 10;
+
+        const palavraElement = document.getElementById('palavra');
+        const tentativasElement = document.getElementById('tentativas');
+        const letraInput = document.getElementById('letra');
+        const adivinharButton = document.getElementById('adivinhar');
+
+        atualizarTela();
+
+        letraInput.addEventListener('input', function() {
+            if (letraInput.value.length === 1) {
+                adivinharButton.disabled = false;
+            } else {
+                adivinharButton.disabled = true;
+            }
+        });
+
+        adivinharButton.addEventListener('click', function() {
+            const letra = letraInput.value.toLowerCase();
+            if (palavraOculta.includes(letra)) {
+                for (let i = 0; i < palavraOculta.length; i++) {
+                    if (palavraOculta[i] === letra) {
+                        palavraExibida = palavraExibida.substring(0, i) + letra + palavraExibida.substring(i + 1);
+                    }
+                }
+            } else {
+                tentativasRestantes--;
+            }
+
+            letraInput.value = '';
+            atualizarTela();
+
+            if (palavraExibida === palavraOculta) {
+                alert('Parabéns, você venceu!');
+                reiniciarJogo();
+            } else if (tentativasRestantes === 0) {
+                alert('Você não adivinhou, quer tentar de novo ou perguntar pro seu namorado? ' );
+                reiniciarJogo();
+            }
+        });
+
+        function escolherPalavraAleatoria(listaPalavras) {
+            const indice = Math.floor(Math.random() * listaPalavras.length);
+            return listaPalavras[indice];
+        }
+
+        function atualizarTela() {
+            palavraElement.textContent = palavraExibida;
+            tentativasElement.textContent = `Tentativas restantes: ${tentativasRestantes}`;
+        }
+
+        function reiniciarJogo() {
+            palavraOculta = escolherPalavraAleatoria(palavras);
+            palavraExibida = '_'.repeat(palavraOculta.length);
+            tentativasRestantes = 10;
+            atualizarTela();
+        }
+    </script>
+</body>
+</html>
